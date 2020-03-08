@@ -1,4 +1,4 @@
-# reading-online
+# reading-online server
 
 ## Project setup
 ```
