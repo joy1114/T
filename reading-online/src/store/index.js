@@ -6,8 +6,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   // 数据定义 存储
   state: {
-    user: {},
-    token: '',
+    user: JSON.parse(sessionStorage.getItem('user')),
+    token: sessionStorage.getItem('token'),
   },
   // 获取数据
   getters:{
@@ -16,10 +16,10 @@ export default new Vuex.Store({
     },
     userCollectArray: function(state){
       var arr = []
-      if(state.user.user_collect != null){
+      if(state.user.user_collect != ''){
         arr = state.user.user_collect.split(',')
-        arr = arr.map((item)=> parseInt(item))
-        
+        arr = arr.map(item => item = parseInt(item))
+        arr.pop()
       }
       return arr
     }
@@ -53,12 +53,18 @@ export default new Vuex.Store({
       state.user = {}
       state.token = ''
     },
-    newCollect: (state,payload) =>{
-      state.user.user_collect = (state.user.user_collect).concat(payload, ',')
+    /* 收藏书籍 更新用户状态 */
+    newCollect: (state,bookid) =>{
+      state.user.user_collect = (state.user.user_collect).concat(bookid, ',')
       sessionStorage.setItem('user', JSON.stringify(state.user))
+    },
+    /* 上传头像 更新用户状态 */
+    uploadPhoto: function(state,url){
+      state.user.user_photo = url
+      sessionStorage.setItem('user',JSON.stringify(state.user))
     }
   },
-  // 
+  // 异步操作 
   actions: {
     Login: function(context,payload){
       console.log('action Login')
@@ -67,12 +73,16 @@ export default new Vuex.Store({
     LoginOut: function(context){
       context.commit('isLoginOut')
     },
-    // Register: function(context,payload){
-    //   context.commit('isRegister',payload)
-    // },
-    newCollect: function(context,payload){
-      context.commit('newCollect',payload)
+    Register: function(context,payload){
+      context.commit('isRegister',payload)
+    },
+    newCollect: function (context,bookid) {
+      context.commit('newCollect',bookid)
+    },
+    uploadPhoto: function(context,url){
+      context.commit('uploadPhoto',url)
     }
+
   },
   modules: {
   }

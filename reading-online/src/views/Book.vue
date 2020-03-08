@@ -106,9 +106,11 @@
 				if (sessionStorage.getItem('token')) {
 					/* 判断该用户收藏过没有 */
 					console.log(that.$store.getters.User.user_id)
-					console.log(that.$store.getters.userCollectArray)
-					// console.log(that.User)
-					if(!that.$store.getters.userCollectArray.length){
+					console.log(that.$store.getters.userCollectArray.length)
+					var arr = that.$store.getters.userCollectArray
+					arr = arr.length? arr.filter((item)=>item === id) : []
+					console.log(arr)
+					if(!arr.length){
 						that.$http.post('/user/collect',{
 						book_id: id.toString(),
 						user_id: that.$store.getters.User.user_id

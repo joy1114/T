@@ -40,7 +40,7 @@ export default {
   name: "login",
   data() {
 			// var regpass = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,10}$/;
-			var regtel = /^1?[1-9]{10}$/;
+			var regtel = /^[1]\d{10}$/;
 			var validateName = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请输入帐号'));
