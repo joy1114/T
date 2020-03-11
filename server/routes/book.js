@@ -11,7 +11,6 @@ router.get('/publishCollect', function (req, res, next) {
         msg: 'Query error!'
       })
     }
-
     res.json({
       data: data
     })

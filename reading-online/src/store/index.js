@@ -41,10 +41,10 @@ export default new Vuex.Store({
     },
     /* 新注册用户 登录 */
     isRegister: function(state,payload){
-      sessionStorage.setItem('user', JSON.stringify(payload.data.insertId))
-      sessionStorage.setItem('token', payload.token)
-      state.user.user_id = payload.data.insertId
-      state.token = payload.token
+      sessionStorage.setItem('user', JSON.stringify(payload))
+      sessionStorage.setItem('token', 'token')
+      state.user = payload
+      state.token = 'token'
     },
     /* 退出登录 清除状态 */
     isLoginOut: state => {

@@ -1,9 +1,11 @@
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
+
 var logger = require('morgan');
 let bookRouter = require('./routes/book')
 let userRouter = require('./routes/user')
+let downloadRouter = require('./routes/download')
 
 var app = express();
 
@@ -15,8 +17,10 @@ app.use(logger('dev'));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
+// 静态资源访问
 app.use(express.static(path.join(__dirname, 'public')));
+
+
 
 // CORS 跨域资源共享，解决跨域问题
 app.use(function (req, res, next) {
@@ -30,6 +34,7 @@ app.use(function (req, res, next) {
 // API
 app.use('/book', bookRouter)
 app.use('/user', userRouter)
+app.use('/download', downloadRouter)
 
 // 404
 app.use(function (req, res, next) {

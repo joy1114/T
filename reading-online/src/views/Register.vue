@@ -105,11 +105,14 @@ export default {
 		};
 		return {
 			ruleForm: {
+				user_id: 0,
 				user_tel: '',
+				user_name: '',
 				user_pass1: '',
 				user_pass2: '',
-				user_name: '',
-				
+				user_photo: '',
+				user_tips: '',
+				user_collect: '',
 			},
 			rules: {
 				user_tel: [
@@ -144,7 +147,10 @@ export default {
 					.then(function (res) {
 						if (res.data.state == 1) {
 							console.log(res.data.data.insertId)
-							that.$store.dispatch('Register',res.data)
+							that.$delete(that.ruleForm,that.ruleForm.user_pass1)
+							that.$delete(that.ruleForm,that.ruleForm.user_pass2)
+							that.ruleForm.user_id = res.data.data.insertId
+							that.$store.dispatch('Register',that.ruleForm)
 							alert(res.data.msg)
 							that.$router.push({
 							path: that.$route.query.redirect || '/home'

@@ -6,18 +6,14 @@
 				<!-- 头像 -->
 				<el-col :span="4" :offset="4">
 					<div class="grid-content">
-						<!-- <el-image :src="user.user_photo">
-							<div slot="placeholder" class="image-slot">
-							加载中<span class="dot">...</span>
-							</div>
-						</el-image> -->
 						<!-- 可上传头像 -->
 						<el-upload
 						class="avatar-uploader"
-						action="https://jsonplaceholder.typicode.com/posts/"
+						action='string'
+						accept="image/jpg,image/jpeg"
 						:show-file-list="false"
-						:on-success="handleAvatarSuccess"
-						:before-upload="beforeAvatarUpload">
+						:http-request="uploadImg"
+						>
 							<img v-if="user.user_photo" :src="user.user_photo" class="avatar">
 							<i v-else class="el-icon-plus avatar-uploader-icon"></i>
 						</el-upload>
@@ -40,13 +36,6 @@
 								</div>
 							</el-col>
 						</el-row>
-						<!-- <el-row>
-							<el-col :span="12">
-								<div class="grid-content">
-									<p>{{user.user_tips}}</p>
-								</div>
-							</el-col>
-						</el-row> -->
 						<el-row>
 							<el-col :span="12">
 								<div class="grid-content">
@@ -102,6 +91,7 @@
 </template>
 
 <script>
+// import qs from 'qs'
 	export default {
 		name: 'personal',
 		components: {
@@ -120,6 +110,7 @@
 			this.$http.get('/user/personal?user_id='+this.$store.getters.User.user_id)
 			.then((res)=>{
 				this.user = res.data.data
+				// console.log(this.user.user_photo)
 			}).catch(function(err){
 				console.log(err)
 			})
@@ -132,7 +123,7 @@
 					book_ids: book_ids
 				})
 				.then( (res)=>{
-					console.log(res.data.data)
+					// console.log(res.data.data)
 					this.bookList = res.data.data
 				}).catch(function(err){
 					console.log(err)
@@ -144,35 +135,85 @@
 			
 		},
 		methods: {
-			/* 上传成功将图片渲染页面 */
-			handleAvatarSuccess(res, file) {
-				this.user.user_photo = URL.createObjectURL(file.raw);
-				/* 请求服务器更新用户头像数据 */
-				this.$http.post('user/photo',{
-					url: URL.createObjectURL(file.raw),
-					user_id: this.user.user_id
-				}).then( res =>{
-					/* 更新成功 改变data 渲染到页面 */
-					this.user.user_photo = URL.createObjectURL(file.raw);
-					/* 修改vuex用户状态 */
-					this.$store.dispatch('uploadPhoto',URL.createObjectURL(file.raw))
-					alert(res.data.msg)
-				}).catch( function(err){
+			// 自定义上传钩子
+			uploadImg(param){
+				var that = this
+				/* formData 文件格式上传 */
+				// console.log(param)
+				let file = param.file
+				let formData = new FormData()
+				formData.append('chunk',file)
+				// console.log(file.name)
+				formData.append('filename',that.formatFilename(file.name).filename)
+				formData.append('userid',that.user.user_id)
+				console.log(formData.get('chunk'))
+				// console.log(formData.get("filename"))
+				// console.log(formData.get('userid'))
+
+				//通过POST方式发送FormData格式的参数 的写法  
+				that.$http({
+				url: '/user/photo',//请求路径（接口）
+				method: 'POST',//请求方式
+				headers: { 'content-type': 'application/x-www-form-urlencoded' },// 请求头，发送FormData格式的数据，必须是 这种请求头
+				data: formData,//发送请求要传的FormData参数
+				}).then(res =>{
+					if(res.data.state === 0){
+						that.user.user_photo = res.data.url
+						this.$store.dispatch('uploadPhoto',res.data.url)
+					console.log(res)
+					}
+					console.log(res.data.msg)
+				}).catch(err =>{
 					console.log(err)
 				})
 			},
-			/* 上传头像限制图像大小 */
+			/* 上传成功将图片渲染页面 */
+			// handleAvatarSuccess(res, file) {
+			// 	console.log(file)
+			// 	console.log(res)
+			// 	this.user.user_photo = URL.createObjectURL(file.raw);
+			// },
+			/* 上传之前 头像限制图像大小 */
 			beforeAvatarUpload(file) {
-				const isJPG = file.type === 'image/jpeg';
+				console.log(file)
+				// const isJPGJPEG = file.type === 'image/jpeg';
 				const isLt2M = file.size / 1024 / 1024 < 2;
-
-				if (!isJPG) {
-					this.$message.error('上传头像图片只能是 JPG 格式!');
-				}
+				// if (!isJPGJPEG) {
+				// 	this.$message.error('上传头像图片只能是 JPG 格式!');
+				// }
 				if (!isLt2M) {
 					this.$message.error('上传头像图片大小不能超过 2MB!');
 				}
-				return isJPG && isLt2M;
+				// return isJPGJPEG && isLt2M;
+				return isLt2M
+			}, 
+			/* 图片转换为base64 格式上传*/
+			// uploadImgToBase64 (file) {
+			// 	return new Promise((resolve, reject) => {
+			// 		const reader = new FileReader()
+			// 		reader.readAsDataURL(file)
+			// 		reader.onload = function () { // 图片转base64完成后返回reader对象
+			// 			resolve(reader)
+			// 		}
+			// 		reader.onerror = reject
+			// 	})
+			// },
+			// 使服务器文件名存储唯一
+			formatFilename: function(filename){
+				console.log(filename)
+				let dotIndex = filename.lastIndexOf('.')
+				let name = filename.substring(0,dotIndex)
+				let suffix = filename.substring(dotIndex+1)
+				let date = new Date()
+				/* md5加密 */
+				name = this.$md5(name) + date.getTime()
+				console.log(name)
+				return {
+					hash: name,
+					// name: name,
+					suffix,
+					filename: `${name}.${suffix}`
+				}
 			}
 		}
 	}
