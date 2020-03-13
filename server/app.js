@@ -6,6 +6,7 @@ var logger = require('morgan');
 let bookRouter = require('./routes/book')
 let userRouter = require('./routes/user')
 let downloadRouter = require('./routes/download')
+let commitRouter = require('./routes/commit')
 
 var app = express();
 
@@ -34,6 +35,7 @@ app.use(function (req, res, next) {
 // API
 app.use('/book', bookRouter)
 app.use('/user', userRouter)
+app.use('/commit', commitRouter)
 app.use('/download', downloadRouter)
 
 // 404

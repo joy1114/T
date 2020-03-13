@@ -1,5 +1,6 @@
 <template>
 	<el-container>
+		
 		<!-- 用户信息 头部 -->
 		<el-header class="user-info">
 			<el-row>
@@ -22,27 +23,40 @@
 				</el-col>
 				<!-- /头像 -->
 				<!-- 用户名及信息 -->
-				<el-col :span="12">
+				<el-col :span="12" class="user-name">
 					<div class="grid-content">
 						<el-row type="flex" justify="space-between" style="align-items: center;">
 							<el-col :span="12">
 								<div class="grid-content">
-									<h1 style="text-align: left;">{{user.user_name}}</h1>
+									<h2 style="text-align: left;">{{user.user_name}}</h2>
 								</div>
 							</el-col>
 							<el-col :span="4">
 								<div class="grid-content">
-									<el-button type="primary" icon="el-icon-edit">编辑资料</el-button>
+									<el-button type="primary" icon="el-icon-edit" :loading="waitLoad"
+									@click="changeInfo"></el-button>
 								</div>
 							</el-col>
 						</el-row>
 						<el-row>
-							<el-col :span="12">
+							<el-col :span="16">
 								<div class="grid-content">
 									<p>{{user.user_tips}}</p>
 								</div>
 							</el-col>
 						</el-row>
+						<el-row>
+							<el-col :span="16">
+								<div class="grid-content">
+									<el-tag>标签一</el-tag>
+									<el-tag type="success">标签二</el-tag>
+									<el-tag type="info">标签三</el-tag>
+									<el-tag type="warning">标签四</el-tag>
+									<el-tag type="danger">标签五</el-tag>
+								</div>
+							</el-col>
+						</el-row>
+						
 					</div>
 				</el-col>
 				<!-- /用户名及信息 -->
@@ -52,37 +66,105 @@
 		<!-- 相关功能板块 -->
 		<el-container>
 			<!-- 功能导航栏 -->
-			<el-aside width=300px>
-				<el-menu>
-					
+			<el-aside width=300px style="padding: 20px">
+				<el-menu
+				default-active="2"
+				class="el-menu-vertical-demo"
+				@open="handleOpen"
+				@close="handleClose"
+				background-color="#ffffd0"
+				text-color="#000000"
+				active-text-color="#ff2292"
+				style="padding: 10px">
+					<el-submenu index="3">
+						<template slot="title">
+							<span class="title">我的阅读</span>
+						</template>
+						<el-menu-item index="3-1">最近阅读</el-menu-item>
+						<el-menu-item index="3-2">我的收藏</el-menu-item>
+						<el-menu-item index="3-3">我的书单</el-menu-item>
+					</el-submenu>
+					<el-submenu index="4">
+						<template slot="title">
+							<span class="title">我的评论</span>
+						</template>
+						<el-menu-item index="4-1">评论管理</el-menu-item>
+						<el-menu-item index="4-2">消息设置</el-menu-item>
+					</el-submenu>
 				</el-menu>
 			</el-aside>
 			<!-- /功能导航栏 -->
+
 			<!-- 功能模块内容 -->
 			<el-main>
-				<!-- 收藏的书籍列表 -->
-				<el-row>
-					<el-col :span="16">
-						<div class="grid-content">
-							<h1>我的书架</h1>
-							<h2 v-show="noCollect">您收藏的书籍将在这里展示！</h2>
-							<div v-if="bookList">
-								<el-col :span="6" v-for="item in bookList" :key="item.book_name">
-									<div :style="{ backgroundImage: `url( ${item.images} )`}"
-									style="height: 200px;width:150px;"></div>
-									<p>{{item.author}}</p>
-									<h3>{{item.book_name}}</h3>
-								</el-col>
+				<!-- 我的阅读 -->
+				<div class="my-read">
+					<div class="split"></div>
+					<el-row>
+						<el-col :span="20">
+							<div class="grid-content">
+								<h2 style="text-align: left;" >最近阅读</h2>
+								<p v-show="noCollect">您最近七天阅读过的书籍将在这里展示！</p>
+								<div class="book-list" v-if="bookList">
+									<el-col :span="6" v-for="item in bookList" :key="item.book_name">
+										<div :style="{ backgroundImage: `url( ${item.images} )`}"
+										style="height: 200px;width:150px;"></div>
+										<p>{{item.author}}</p>
+										<h3>{{item.book_name}}</h3>
+									</el-col>
+								</div>
 							</div>
-						</div>
-					</el-col>
-					<el-col :span="4">
-						<div class="grid-content">
-							<h1>this is personal</h1>
-						</div>
-					</el-col>
-				</el-row>
-				<!-- /收藏的书籍列表 -->
+						</el-col>
+						<!-- <el-col :span="4">
+							<div class="grid-content">
+								<h1>this is personal</h1>
+							</div>
+						</el-col> -->
+					</el-row>
+					<!-- /我的阅读 -->
+					<!-- 最近阅读书籍列表 -->
+					<div class="split"></div>
+					<el-row>
+						<el-col :span="20">
+							<div class="grid-content">
+								<h2 style="text-align: left;" >我的收藏</h2>
+								<p v-show="noCollect">您收藏的书籍将在这里展示！</p>
+								<div class="book-list" v-if="bookList">
+									<el-col :span="6" v-for="item in bookList" :key="item.book_name">
+										<div :style="{ backgroundImage: `url( ${item.images} )`}"
+										style="height: 200px;width:150px;"></div>
+										<p>{{item.author}}</p>
+										<h3>{{item.book_name}}</h3>
+									</el-col>
+								</div>
+							</div>
+						</el-col>
+					</el-row>
+				</div>
+				<div class="my-commit">
+					<div class="split"></div>
+						<el-row>
+							<el-col :span="20">
+								<div class="grid-content">
+									<h2 style="text-align: left;" >我的评论</h2>
+									<p v-show="noCollect">您评论内容将在这里展示！</p>
+									<div class="book-list" v-if="commitList">
+										<el-col :span="6" v-for="item in commitList" :key="item.book_name">
+											<div :style="{ backgroundImage: `url( ${item.images} )`}"
+											style="height: 200px;width:150px;"></div>
+											<p>{{item.author}}</p>
+											<h3>{{item.book_name}}</h3>
+										</el-col>
+									</div>
+								</div>
+							</el-col>
+						</el-row>
+				</div>
+				<!-- <div class="">
+
+				</div> -->
+				
+				<!-- /最近阅读书籍列表 -->
 			</el-main>
 			<!-- /功能模块内容 -->
 		</el-container>
@@ -91,18 +173,18 @@
 </template>
 
 <script>
-// import qs from 'qs'
+
 	export default {
 		name: 'personal',
 		components: {
-			// HelloWorld
 		},
 		data() {
 			return {
 				user: {},
 				bookList: [],
-				commits:[],
+				commitList:[],
 				noCollect: false,
+				waitLoad: false,
 			}
 		},
 		created(){
@@ -110,7 +192,6 @@
 			this.$http.get('/user/personal?user_id='+this.$store.getters.User.user_id)
 			.then((res)=>{
 				this.user = res.data.data
-				// console.log(this.user.user_photo)
 			}).catch(function(err){
 				console.log(err)
 			})
@@ -130,25 +211,18 @@
 				})
 			}else{
 				this.noCollect = true
-			}
-			
-			
+			}			
 		},
 		methods: {
 			// 自定义上传钩子
 			uploadImg(param){
 				var that = this
 				/* formData 文件格式上传 */
-				// console.log(param)
 				let file = param.file
 				let formData = new FormData()
 				formData.append('chunk',file)
-				// console.log(file.name)
 				formData.append('filename',that.formatFilename(file.name).filename)
 				formData.append('userid',that.user.user_id)
-				console.log(formData.get('chunk'))
-				// console.log(formData.get("filename"))
-				// console.log(formData.get('userid'))
 
 				//通过POST方式发送FormData格式的参数 的写法  
 				that.$http({
@@ -160,31 +234,18 @@
 					if(res.data.state === 0){
 						that.user.user_photo = res.data.url
 						this.$store.dispatch('uploadPhoto',res.data.url)
-					console.log(res)
 					}
-					console.log(res.data.msg)
+					alert(res.data.msg)
 				}).catch(err =>{
 					console.log(err)
 				})
 			},
-			/* 上传成功将图片渲染页面 */
-			// handleAvatarSuccess(res, file) {
-			// 	console.log(file)
-			// 	console.log(res)
-			// 	this.user.user_photo = URL.createObjectURL(file.raw);
-			// },
 			/* 上传之前 头像限制图像大小 */
 			beforeAvatarUpload(file) {
-				console.log(file)
-				// const isJPGJPEG = file.type === 'image/jpeg';
 				const isLt2M = file.size / 1024 / 1024 < 2;
-				// if (!isJPGJPEG) {
-				// 	this.$message.error('上传头像图片只能是 JPG 格式!');
-				// }
 				if (!isLt2M) {
 					this.$message.error('上传头像图片大小不能超过 2MB!');
 				}
-				// return isJPGJPEG && isLt2M;
 				return isLt2M
 			}, 
 			/* 图片转换为base64 格式上传*/
@@ -214,6 +275,18 @@
 					suffix,
 					filename: `${name}.${suffix}`
 				}
+			},
+			changeInfo(){
+				var that = this
+				that.waitLoad = true
+
+				console.log()
+			},
+			handleOpen(key, keyPath) {
+				console.log(key, keyPath);
+			},
+			handleClose(key, keyPath) {
+				console.log(key, keyPath);
 			}
 		}
 	}
@@ -222,6 +295,9 @@
 <style scoped>
 .user-info{
 	height: 200px!important;
+}
+.user-name .el-row{
+	text-align: left;
 }
 /* 头像区域 */
 	.avatar-uploader .el-upload {
@@ -252,4 +328,20 @@
 		display: block;
 	}
 /* /头像区域 */
+/* 分割线 */
+.split{
+	width: 100%;
+	border: 2px solid orangered;
+}
+/* 列表样式 */
+.book-list{
+	background-color: beige;
+}
+/* 功能菜单样式 */
+.el-submenu{
+	text-align: left;
+}
+.title{
+	font-size: 18px;
+}
 </style>

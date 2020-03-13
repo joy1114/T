@@ -5,6 +5,7 @@
 				<Nav></Nav>
 			</el-header>
 			<el-main>
+				<!-- 图书信息 -->
 				<el-row :gutter="10" type="flex" class="row-bg" justify="center">
 					<el-col :span="6" class="intro-images">
 						<div class="grid-content"
@@ -38,7 +39,17 @@
 						</div>
 					</el-col>
 				</el-row>
-				<TypesBox></TypesBox>
+				<!-- /图书信息 -->
+				<!-- 评论区 -->
+				<el-row type="flex" justify="center" class="commit">
+					<el-col :span="16">
+						<div class="grid-content">
+							<!-- <TypesBox></TypesBox> -->
+							<CommitBox></CommitBox>
+						</div>
+					</el-col>
+				</el-row>
+				<!-- /评论区 -->
 			</el-main>
 			<el-footer>
 				<FooterInfo></FooterInfo>
@@ -50,14 +61,16 @@
 
 <script>
 	import Nav from "../components/Nav.vue";
-	import TypesBox from "../components/TypesBox.vue";
+	// import TypesBox from "../components/TypesBox.vue";
 	import FooterInfo from "../components/FooterInfo.vue";
+	import CommitBox from "../components/CommitBox.vue"
 	export default {
 		name: "BookIntroduce",
 		components: {
 			Nav,
-			TypesBox,
-			FooterInfo
+			// TypesBox,
+			FooterInfo,
+			CommitBox,
 		},
 		data() {
 			return {
@@ -165,5 +178,9 @@
 	}
 	.bg-purple-light {
 		background: #e5e9f2;
-  }
+	}
+  /* 评论区 */
+	.commit{
+		padding: 20px;
+	}
 </style>

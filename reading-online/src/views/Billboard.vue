@@ -62,21 +62,9 @@ export default {
 		
 		var that = this
 		that.billboard = "publishCollect"
-		console.log("当前是created："+that.billboard)
-		// var boardCategory = that.billboard.split(/(?=[A-Z])/)
-		// that.channel = boardCategory[0]
-		// that.boardName = boardCategory[1]
-		// console.log('查询依据'+boardCategory+'channel:'+that.channel+'boardName:'+that.boardName)
 		this.path = '/book/'+this.billboard
 		this.getBook(this.path)
 		
-	},
-	mounted(){
-		// 页面元素生成完毕调用 操作部分Dom 相关数据
-		// this.billboard = this.$route.params.id,
-		// this.channel =  this.billboard.split(':')[0]
-		// this.boardName =  this.billboard.split(':')[1].split('榜')[0]
-		// console.log("当前的频道是："+this.billboard)
 	},
 	watch: {
 		// 解决组件复用后生命周期钩子函数不会第二次调用问题 
@@ -106,9 +94,6 @@ export default {
 			})
 		}
 	}
-	// props: {
-	// 	billboardName: String
-	// },
 
 }
 </script>

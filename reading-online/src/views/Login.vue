@@ -25,11 +25,11 @@
 						clearable></el-input>
 					</el-form-item>
 					<el-form-item>
-						<el-button type="primary"
+						<el-button type="primary" :loading="waitLogin"
 						@click="login('ruleForm')" style="width: 400px;">登 录</el-button>
 					</el-form-item>
 					<el-form-item>
-							<el-button @click="register" style="width: 400px;">注 册</el-button>
+							<el-button :loading="waitRegister" @click="register" style="width: 400px;">注 册</el-button>
 					</el-form-item>
 				</el-form>
 			</el-main>
@@ -61,6 +61,8 @@ export default {
         }
       };
 			return {
+        waitRegister: false,
+        waitLogin: false,
         ruleForm: {
           user_tel: '',
           user_pass: '',
@@ -83,7 +85,8 @@ export default {
 	
   methods: {
 		login(formName) {
-				var that = this;
+        var that = this;
+        that.waitLogin = true
         that.$refs[formName].validate((valid) => {
           if (valid) {
             // 登录请求
@@ -104,6 +107,7 @@ export default {
             
                   /* that.$router.push('/home') */
                 } else{
+                  that.waitLogin = false
 									alert(res.data.msg)
                 }
               })
@@ -111,12 +115,14 @@ export default {
                 console.log(err)
               });
           } else {
+            that.waitLogin = false
 						console.log('error submit!!')
             return false
           }
         });
       },
       register(){
+        this.waitRegister = false
         this.$router.push({
           path: '/register',
           query:{

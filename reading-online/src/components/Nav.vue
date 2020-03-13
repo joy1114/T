@@ -9,7 +9,8 @@
 			<el-col :span="6">
 				<div class="grid-content">
 					<el-menu :default-active="activeIndex"
-					class="el-menu-demo" background-color="#ffffff"
+					class="el-menu-demo" background-color=cadetblue
+					text-color="#ffffff"
 					mode="horizontal"
 					:router="true">
 						<el-menu-item index="/HRead">首页</el-menu-item>
@@ -48,16 +49,17 @@
 			<el-col :span="6" v-if="Token">
 				<div class="grid-content">
 					<el-menu default-active="" mode="horizontal"
-					class="el-menu-horizontal-demo" background-color="#ffffff"
+					class="el-menu-horizontal-demo" background-color=cadetblue
+					text-color="#ffffff"
 					@select="userSelect">
 						<el-menu-item index="/personnal">
-							<i class="el-icon-user"></i>
+							<i class="el-icon-user nav-icon"></i>
 							{{User}}
 						</el-menu-item>
 						<el-submenu index="2">
 							<template slot="title">
 								<el-badge is-dot>
-									<i class="el-icon-message"></i>
+									<i class="el-icon-message nav-icon"></i>
 								</el-badge>
 							</template>
 							<el-menu-item index="/commit">评论</el-menu-item>
@@ -66,7 +68,7 @@
 						</el-submenu>
 						<el-submenu index="3">
 							<template slot="title">
-								<i class="el-icon-setting"></i>
+								<i class="el-icon-setting nav-icon"></i>
 							</template>
 							<el-menu-item index="/account-setting">帐号设置</el-menu-item>
 							<el-menu-item index="/message-setting">消息设置</el-menu-item>
@@ -165,6 +167,8 @@
 		position: fixed;
 		z-index: 10;
 		height: 68px;
+		color: #ffffff;
+		background-color: cadetblue;
 	}
 	.el-row {
 		margin-bottom: 20px;
@@ -174,6 +178,10 @@
 	}
 	.el-menu.el-menu--horizontal{
 		border: 0;
+	}
+	/* 图标颜色 */
+	.nav-icon{
+		color: #ffffff;
 	}
 	/* 去除用户相关menu的指示箭头 */
 	.el-icon-arrow-down:before {

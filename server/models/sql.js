@@ -6,7 +6,8 @@ module.exports = function(sql, arr, callback) {
     user: 'root',
     password: 'root',
     database: 'read',
-    port: 3306
+    port: 3306,
+    timezone: "08:00"
   });
   
   connection.connect();

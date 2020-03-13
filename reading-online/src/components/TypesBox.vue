@@ -64,7 +64,20 @@
 			that.common.getCategory(that._self)
 			that.common.getBookList(that._self)
 		},
-		mounted(){
+		watch: {
+			// 动态监听 数据 刷新页面内容
+			bookList: {
+				handler:function (to) {
+					this.bookList =  to
+					},
+					deep:true
+			},
+			categoryList: {
+				handler: function(to) {
+					this.categoryList = to
+				},
+				deep: true
+			}
 		},
 		methods: {
 			// 点击分类link 向分类页路由传参 便于相应请求书籍列表数据

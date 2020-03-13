@@ -40,7 +40,7 @@
 				</el-form-item>
 				<el-form-item>
 					<el-button type="primary"
-					@click="submitForm('ruleForm')" style="width: 400px;">注册并登录</el-button>
+					@click="submitForm('ruleForm')" :loading="true" style="width: 400px;">注册并登录</el-button>
 				</el-form-item>
 			</el-form>
 		</el-main>
@@ -145,6 +145,7 @@ export default {
 						user_name: that.ruleForm.user_name
 					})
 					.then(function (res) {
+						
 						if (res.data.state == 1) {
 							console.log(res.data.data.insertId)
 							that.$delete(that.ruleForm,that.ruleForm.user_pass1)
@@ -156,6 +157,7 @@ export default {
 							path: that.$route.query.redirect || '/home'
 						})
 						}else {
+							that.waitRegister = false
 							alert(res.data.msg)
 						}
 					})
@@ -163,6 +165,7 @@ export default {
 						console.log(err);
 					});
 				} else {
+					that.waitRegister = false
 					console.log('error submit!!');
 					return false;
 				}
