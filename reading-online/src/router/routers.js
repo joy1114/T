@@ -20,7 +20,7 @@ var router = new Router({
             component: Home,
 		},
 		{
-			path: '/详情/:id',
+			path: '/详情/:id',//动态路由 匹配 ：书籍id
 			name: 'BookInfo',
 			component: () => import("@/pages/bookInfo.vue"),/* 书籍详情页 */
 		},
@@ -29,21 +29,10 @@ var router = new Router({
 			path: '/阅读/:id',
 			name: 'Read',
 			component: () => import("@/pages/read"),/* 阅读页面 */
-			meta:{
-				'keep-alive': true
-			}
-			// children: [
-			// 	{
-			// 		path: 'collection',//以“/”开头的嵌套路径会被当作根路径，所以子路由上不用加“/”;在生成路由时，主路由上的path会被自动添加到子路由之前，所以子路由上的path不用在重新声明主路由上的path了。
-			// 		name: 'Collection',
-			// 		component: readingWords
-			// 	},
-			// 	{
-			// 		path: 'trace',
-			// 		name: 'Trace',
-			// 		component: Trace
-			// 	}
-			// ]
+			// 自定义路由权限
+			// meta:{
+			// 	'keep-alive': true
+			// }
 		},
 		{
 			path: '/书架/:name',
@@ -51,7 +40,7 @@ var router = new Router({
 			component: () => import('@/pages/shelf'),
 			meta: {
 				// 自定义规则
-				auth: true // 设置为true的路由是需要权限的
+				auth: true // 设置为true的路由是需要登录权限的
 			}
 		},
 		{
@@ -60,7 +49,7 @@ var router = new Router({
 			component: () => import('@/pages/myComment'),
 			meta: {
 				// 自定义规则
-				auth: true // 设置为true的路由是需要权限的
+				auth: true // 设置为true的路由是需要登录权限的
 			}
 		},
 
@@ -109,7 +98,7 @@ var router = new Router({
 			// ],
 			meta: {
 				// 自定义规则
-				auth: true // 设置为true的路由是需要权限的
+				auth: true // 设置为true的路由是需要登录权限的
 			}
 		},
 		{
@@ -122,6 +111,7 @@ var router = new Router({
 			name: 'Register',
 			component: () => import('@/pages/register')
 		},
+		// 除以上明确路由外其他路径匹配到首页
 		{
 			path: '*',
 			redirect: '/首页'
@@ -139,7 +129,7 @@ router.beforeEach(function (to, from, next) {
 	} else {
 		sessionStorage.setItem('history', to.fullPath)
 	}
-	// 判断即将访问的路由是否需要权限
+	// 判断即将访问的路由是否需要登录权限
     if (to.meta.auth) {
 		if (token) {
 			next()

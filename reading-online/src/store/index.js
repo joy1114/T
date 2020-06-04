@@ -14,9 +14,11 @@ export default new Vuex.Store({
   },
   // 获取数据
   getters:{
+    // 登录状态
     Token: function(state){
       return state.token
     },
+    // 登录用户信息
     User: function(state){
       if(state.user===null)
       {
@@ -24,6 +26,7 @@ export default new Vuex.Store({
       }
       return state.user
     },
+    // 用户书架列表数据
     userShelfArray: (state) => ()=>{
       var arr = []
       if (state.token && state.shelf.length) {
@@ -34,12 +37,12 @@ export default new Vuex.Store({
       }
       return arr
     },
+    // 用户最近阅读列表数据
     userLatelyReadArray: (state) => ()=>{
       var arr = [
         [],
         []
       ]
-      console.log('这里')
       if (state.token && state.latelyRead.length) {
         state.latelyRead.map((item, index) => {
           arr[0][index] = item.book_id
@@ -49,6 +52,7 @@ export default new Vuex.Store({
       }
       return arr
     },
+    // 该书籍用户是否读过
     bookIsReaded:(state) => () => {
       return state.isReadedText
     },
@@ -62,10 +66,12 @@ export default new Vuex.Store({
       state.user = payload.data
       state.token = payload.token
     },
+    // 书架列表数据改变
     shelfData: function(state,payload){
       sessionStorage.setItem('shelf',JSON.stringify(payload))
       state.shelf = payload
     },
+    // 最近阅读数据改变
     latelyReadData: function(state,payload){
       sessionStorage.setItem('latelyRead', JSON.stringify(payload))
       state.latelyRead = payload
@@ -77,7 +83,7 @@ export default new Vuex.Store({
       state.user = payload
       state.token = 'token'
     },
-    /* 退出登录 清除状态 */
+    /* 退出登录 清除状态数据 */
     isLoginOut: state => {
       sessionStorage.removeItem('token')
       sessionStorage.removeItem('user')
@@ -89,7 +95,7 @@ export default new Vuex.Store({
       state.shelf = []
       state.latelyRead = []
     },
-    /* 收藏书籍 更新用户状态 */
+    /* 收藏书籍 更新用户书架信息 */
     addShelf: (state,bookid) =>{
       let newData = {
         user_id: state.user.user_id,
@@ -98,6 +104,7 @@ export default new Vuex.Store({
       state.shelf.push(newData)
       sessionStorage.setItem('shelf', JSON.stringify(state.shelf))
     },
+    // 最近阅读书籍增加
     addLatelyRead: function(state,params){
       state.latelyRead.push([params])
       sessionStorage.setItem('latelyRead',JSON.stringify(state.latelyRead))
@@ -120,6 +127,7 @@ export default new Vuex.Store({
       }
       sessionStorage.setItem('latelyRead',JSON.stringify(state.latelyRead))
     },
+    // 阅读书籍 改变该书籍的是否阅读状态
     isReaded: function(state, isReadedtext) {
       state.isReadedText = isReadedtext,
       sessionStorage.setItem('isReadedText', state.isReadedText)
@@ -147,7 +155,7 @@ export default new Vuex.Store({
     },
     
   },
-  // 异步操作 
+  // 异步操作  保证数据和视图同步更新
   actions: {
     Login: function(context,payload){
       console.log('action Login')

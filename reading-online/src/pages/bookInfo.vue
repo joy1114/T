@@ -12,6 +12,7 @@
         </div>
         <!-- 弹出导航菜单 -->
         <Menu :msg="show"></Menu>
+
 		<div class="book-intro">
 			<van-row type="flex">
 				<van-col span="8">
@@ -109,22 +110,33 @@
 		},
 		data() {
 			return {
+				// 导航菜单显隐
 				show: false,
+				// 书籍目录列表显隐
 				isShowBookMenu: false,
+				// 书籍描述字数>60显示展开或收起样式
 				isShowMore: false,
+				// 控制展开或收起样式
 				isDescStatus: true,
 				book_name: '',
 				book:{},
+				// 是否收藏
 				isAdd: '',
+				// 是否禁用加入书架按钮
 				isDisabledAdd: '',
+				// 是否已读该书籍
 				isReaded: '',
+				// 已读到第几章节
 				title: 0,
 				directories: [],
+				// 书籍更新时间
 				update_time: '',
+				// 书籍是否已完结 控制目录标题text
 				isFinished: Boolean,
 			};
 		},
 		computed: {
+			// 从vuex状态获取数据
 			latelyread:function(){
 				return this.$store.getters.userLatelyReadArray()
 			},
@@ -142,12 +154,14 @@
 			var that = this
 			// 用户是否已加入书架
 			let arr = that.shelfarr
+			// 过滤用户书架书籍 查找该书籍是否存在于用户书架中
 			arr = arr.length? arr.filter((item)=>item === parseInt(that.$route.params.id)) : []
 			that.isAdd = arr.length?'已在书架':'加入书架'
 			that.isDisabledAdd = arr.length?true:false
+
 			/* 用户最近有没有读过 */
-			
 			let readed = false
+			// latelyread构成 一维已读书籍id 二维读至的章节
 			if(that.latelyread.length){
 				that.latelyread[0].map( (item,index)=> {
 					if(item === parseInt(that.$route.params.id)){
@@ -158,6 +172,7 @@
 			}
 			that.isReaded = readed?'继续阅读':'开始阅读'
 			that.$store.dispatch('IsReaded',that.isReaded)
+
 			/* 获取图书信息 */
 			that.book_name = that.$route.query.book_name
 			that.$http.get('/book/one?book_id='+that.$route.params.id)
@@ -170,6 +185,7 @@
 			}).catch( function(err){
 				console.log(err)
 			})
+
 			/* 请求目录列表 */
 			that.$http.get('/book/titles?bookid='+that.$route.params.id).then( res => {
 				if(res.data.state === 200){
@@ -181,6 +197,7 @@
 			})
 		},
 		methods: {
+			// 点击描述的展开或收起按钮时间
 			clickBtton(){
 				let el = this.$refs.button
 				el.previousElementSibling.classList[!this.isDescStatus ? 'add' : 'remove']('van-multi-ellipsis--l3')
@@ -189,6 +206,7 @@
 				this.isDescStatus = !this.isDescStatus
 				this.isShowMore = true
 			},
+			// 返回上一个页面
 			backStep(){
 				// console.log(sessionStorage.getItem('history'))
 				let arr = sessionStorage.getItem('history').split(',')
@@ -201,6 +219,7 @@
 					path: from
 				})
 			},
+			// 显示或隐藏导航菜单
 			showMenu(){
 				this.show = this.show?false:true
 			},
@@ -248,6 +267,7 @@
 					})
 				}
 			},
+			// 点击开始阅读或继续阅读按钮 跳转至阅读页面
 			toReadPage(){
 				var that = this
 				that.$router.push({
@@ -257,6 +277,7 @@
 					}
 				})
 			},
+			// 从目录列表 跳转至阅读页面
 			toChapter(title){
 				this.title = title
 				this.toReadPage()
@@ -272,9 +293,7 @@
 
 <style scoped>
 /* 书图 名 板块 */
-/* book-info{
-	background: #fafafa;
-} */
+
 .book-intro{
 	margin-top: 47px;
 	padding-top: 25px;
@@ -309,14 +328,13 @@
 .book-intro-words p{
 	margin: 0px auto;
 	text-align: left;
-	/* font-family: 'SimHei', Helvetica, sans-serif; */
 	font-style: inherit;
 	font-size: 1rem;
 	line-height: 1.5rem;
 	color: #756c6c;
 	text-indent: 2rem;
 }
-/* zhankai */
+/* 展开按钮 */
 .btn-more.more-collapse::after,
 .btn-more.more-collapse::before {
 	top: 2px;
@@ -354,6 +372,7 @@
 	margin-top: rc(5);
 	padding-right: rc(33);
 }
+/* 目录列表 */
 .book-menu>.van-cell{
 	text-align: left;
 	font-size: 1rem;

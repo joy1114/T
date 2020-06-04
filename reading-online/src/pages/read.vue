@@ -141,7 +141,7 @@
 		ref="content"
 		:style="{background: style.background,color: style.color,
 		'font-size': style.fontSize+'px',
-		filter: 'brightness('+[isNight?0.1:1]+')'}">
+		filter: 'brightness('+[isNight?0.3:1]+')'}">
 			<!-- 书籍内容 上拉 上一章 下拉 下一章 -->
 			<div class="content">
 				<van-pull-refresh v-model="loadList.ispre"

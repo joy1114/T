@@ -1,17 +1,12 @@
 <template>
   <div id="app">
 		<router-view/>
-    <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
-    <!-- <MyFooter></MyFooter> -->
 	</div>
 </template>
 <script>
 	// import MyFooter from '@/components/FooterInfo.vue'
 export default {
 	name: 'app',
-	components: {
-		// MyFooter,
-  },
 }
 </script>
 

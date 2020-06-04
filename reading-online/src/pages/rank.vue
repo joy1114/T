@@ -47,12 +47,6 @@ export default {
     },
     watch: {
         // 动态监听 数据 刷新页面内容
-        // categoryList: {
-        //     handler: function(to) {
-        //         this.categoryList = to
-        //     },
-        //     deep: true
-        // },
     },
     created(){
         // 请求数据接口
