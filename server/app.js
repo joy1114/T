@@ -5,8 +5,10 @@ var path = require('path');
 var logger = require('morgan');
 let bookRouter = require('./routes/book')
 let userRouter = require('./routes/user')
-let downloadRouter = require('./routes/download')
-let commitRouter = require('./routes/commit')
+let uploadRouter = require('./routes/upload')
+let commentRouter = require('./routes/comment')
+let channelRouter = require('./routes/channel')
+let rankRouter = require('./routes/rank')
 
 var app = express();
 
@@ -33,10 +35,12 @@ app.use(function (req, res, next) {
 
 
 // API
+app.use('/upload', uploadRouter)
 app.use('/book', bookRouter)
 app.use('/user', userRouter)
-app.use('/commit', commitRouter)
-app.use('/download', downloadRouter)
+app.use('/comment', commentRouter)
+app.use('/channel', channelRouter)
+app.use('/rank', rankRouter)
 
 // 404
 app.use(function (req, res, next) {

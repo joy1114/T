@@ -6,6 +6,7 @@ module.exports = function(sql, arr, callback) {
     user: 'root',
     password: 'root',
     database: 'read',
+    multipleStatements: true,
     port: 3306,
     timezone: "08:00"
   });
